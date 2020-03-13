@@ -1,7 +1,15 @@
-'use strict';
+let money, time;
 
-let money = +prompt('Ваш бюджет на месяц', ''),
+function start() {
+    money = +prompt('Ваш бюджет на месяц', '');
     time = prompt('Введите дату в формате YYYY-MM-DD', '');
+
+    while (isNaN(money) || money == '' || money == null) {
+        money = +prompt('Ваш бюджет на месяц', '');
+    }
+}
+start();
+
 
 let appData = {
     budget: money,
@@ -9,25 +17,27 @@ let appData = {
     expenses: {},
     optionalExpenses: {},
     income: [],
-    savings: false
+    savings: true
 };
 
+function chooseExpenses() {
+    for (let i = 0; i < 2; i++) {
+        let article = prompt('Введите обязательную статью расходов в этом месяце', ''),
+            amount = prompt('Во сколько обойдётся?', '');
 
-for (let i = 0; i < 2; i++) {
-    let article = prompt('Введите обязательную статью расходов в этом месяце', ''),
-        amount = prompt('Во сколько обойдётся?', '');
-
-    if ((typeof (article)) === 'string' && (typeof (article)) != null && (typeof (amount)) != null &&
-        article != '' && amount != '' && article.length < 50) {
-        console.log('done');
-        appData.expenses[article] = amount;
-    } else {
-        console.log ("bad result");
-        i--;
+        if ((typeof (article)) === 'string' && (typeof (article)) != null && (typeof (amount)) != null &&
+            article != '' && amount != '' && article.length < 50) {
+            console.log('done');
+            appData.expenses[article] = amount;
+        } else {
+            console.log("bad result");
+            i--;
+        }
     }
 }
+chooseExpenses();
 
-appData.moneyPerDay = appData.budget / 30;
+appData.moneyPerDay = (appData.budget / 30).toFixed();
 
 alert('Ежедневный бюджет: ' + appData.moneyPerDay);
 
@@ -40,3 +50,14 @@ if (appData.moneyPerDay < 100) {
 } else {
     console.log('Произошла ошибка');
 }
+
+function checkSavings() {
+    if (appData.savings == true) {
+        let save = +prompt('Какова сумма накоплений?', ''),
+            percent = +prompt('Под какой процент?', '');
+
+        appData.monthIncome = save / 100 / 12 * percent;
+        alert('Доход в месяц с вашего депозита: ' + appData.monthIncome);
+    }
+}
+checkSavings();
